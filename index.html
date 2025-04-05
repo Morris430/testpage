@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>測驗</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            position: relative;
+        }
+
+        #question, #crosshair, #countdown, #options {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #crosshair {
+            font-size: 50px;
+            color: red;
+        }
+
+        #options {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .option {
+            font-size: 24px;
+            margin: 0;
+            padding: 10px 20px;
+            cursor: pointer;
+            position: absolute;
+            transform: translate(-50%, -50%);
+        }
+
+        .top-left { top: 10%; left: 10%; }
+        .top-right { top: 10%; right: 10%; }
+        .bottom-left { bottom: 10%; left: 10%; }
+        .bottom-right { bottom: 10%; right: 10%; }
+
+        #question, #countdown {
+            font-size: 30px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div id="question"></div>
+    <div id="crosshair">+</div>
+    <div id="countdown"></div>
+    
+    <div id="options">
+        <div id="optionA" class="option top-left">A. 選項1</div>
+        <div id="optionB" class="option top-right">B. 選項2</div>
+        <div id="optionC" class="option bottom-left">C. 選項3</div>
+        <div id="optionD" class="option bottom-right">D. 選項4</div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "問題 1：你喜歡什麼顏色？",
+                options: ["紅色", "藍色", "綠色", "黃色"],
+                correctAnswer: "A"
+            },
+            {
+                question: "問題 2：你喜歡哪個季節？",
+                options: ["春天", "夏天", "秋天", "冬天"],
+                correctAnswer: "B"
+            }
+            // 可以再增加更多題目
+        ];
+
+        let currentQuestionIndex = 0;
+        let startTime;
+        let endTime;
+        let userAnswer = [];
+        let isAnswering = false;  // 是否在作答階段
+
+        // 鍵盤選擇
+        let selectedOption = null;
+        document.addEventListener("keydown", (event) => {
+            if (isAnswering) {  // 只有在作答階段才監聽鍵盤輸入
+                if (event.key === "a" || event.key === "A") {
+                    selectedOption = "A";
+                    submitAnswer();
+                } else if (event.key === "b" || event.key === "B") {
+                    selectedOption = "B";
+                    submitAnswer();
+                } else if (event.key === "c" || event.key === "C") {
+                    selectedOption = "C";
+                    submitAnswer();
+                } else if (event.key === "d" || event.key === "D") {
+                    selectedOption = "D";
+                    submitAnswer();
+                }
+            }
+        });
+
+        function startQuestion() {
+            // 開始顯示題目畫面
+            showQuestionScreen();
+        }
+
+        function showQuestionScreen() {
+            // 顯示題目，並等5秒後顯示十字定位
+            document.getElementById("question").innerText = questions[currentQuestionIndex].question;
+            document.getElementById("question").style.display = 'block';
+            setTimeout(showCrosshairScreen, 5000); // 顯示5秒後轉到十字定位畫面
+        }
+
+        function showCrosshairScreen() {
+            // 隱藏題目，顯示十字
+            document.getElementById("question").style.display = 'none';
+            document.getElementById("crosshair").style.display = 'block';
+            setTimeout(showCountdownScreen, 2000); // 顯示2秒後轉到倒數畫面
+        }
+
+        function showCountdownScreen() {
+            // 隱藏十字，顯示倒數
+            document.getElementById("crosshair").style.display = 'none';
+            const countdownElement = document.getElementById("countdown");
+            countdownElement.style.display = 'block';
+            countdownElement.innerText = 3;
+            countdown(3);
+        }
+
+        function countdown(count) {
+            const countdownElement = document.getElementById("countdown");
+            if (count > 0) {
+                setTimeout(() => {
+                    countdownElement.innerText = count - 1;
+                    countdown(count - 1);
+                }, 1000);
+            } else {
+                countdownElement.style.display = 'none';
+                showOptionsScreen();
+            }
+        }
+
+        function showOptionsScreen() {
+            // 顯示選項區塊
+            const optionsDiv = document.getElementById("options");
+            optionsDiv.style.display = 'block';  // 顯示選項
+
+            // 顯示選項內容
+            const optionA = document.getElementById("optionA");
+            const optionB = document.getElementById("optionB");
+            const optionC = document.getElementById("optionC");
+            const optionD = document.getElementById("optionD");
+
+            optionA.innerText = `A. ${questions[currentQuestionIndex].options[0]}`;
+            optionB.innerText = `B. ${questions[currentQuestionIndex].options[1]}`;
+            optionC.innerText = `C. ${questions[currentQuestionIndex].options[2]}`;
+            optionD.innerText = `D. ${questions[currentQuestionIndex].options[3]}`;
+
+            startTime = new Date().getTime(); // 記錄作答時間開始
+
+            // 啟用鍵盤監聽
+            isAnswering = true;
+        }
+
+        function submitAnswer() {
+            if (!selectedOption) return;
+
+            const question = questions[currentQuestionIndex];
+
+            // 記錄選擇的答案
+            userAnswer.push({
+                question: question.question,
+                selectedOption: selectedOption,
+                correctAnswer: question.correctAnswer,
+                timeTaken: (new Date().getTime() - startTime) / 1000 // 計算時間
+            });
+
+            // 隱藏選項畫面
+            document.getElementById("options").style.display = 'none';
+
+            // 顯示下一題
+            currentQuestionIndex++;
+            selectedOption = null;  // 重置選項
+            isAnswering = false;  // 禁用鍵盤輸入
+
+            if (currentQuestionIndex < questions.length) {
+                setTimeout(startQuestion, 1000); // 等待1秒後開始下一題
+            } else {
+                displayResults();
+            }
+        }
+
+        function displayResults() {
+            let resultHtml = '<h2>測驗結果</h2>';
+            userAnswer.forEach(answer => {
+                resultHtml += `<p>問題: ${answer.question} <br>選擇: ${answer.selectedOption} (正確答案: ${answer.correctAnswer}) <br>耗時: ${answer.timeTaken} 秒</p>`;
+            });
+            document.body.innerHTML = resultHtml;
+        }
+
+        // 開始測驗
+        startQuestion();
+    </script>
+</body>
+</html>
