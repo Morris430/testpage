@@ -43,13 +43,13 @@
             transform: translate(-50%, -50%);
         }
 
-        .top-left { top: 10%; left: 10%; }
-        .top-right { top: 10%; right: 10%; }
-        .bottom-left { bottom: 10%; left: 10%; }
-        .bottom-right { bottom: 10%; right: 10%; }
+        .top-left { top: 25%; left: 25%; }
+        .top-right { top: 25%; right: 5%; }
+        .bottom-left { top: 75%; left: 25%; }
+        .bottom-right { top: 75%; right: 5%; }
 
         #question, #countdown {
-            font-size: 30px;
+            font-size: 40px;
             margin-top: 20px;
         }
     </style>
@@ -71,13 +71,19 @@
     <script>
         const questions = [
             {
-                question: "問題 1：你喜歡什麼顏色？",
-                options: ["紅色", "藍色", "綠色", "黃色"],
-                correctAnswer: "A"
+                question: "病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hydralazine 10mg/TAB",
+                options: ["病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hybralazine 10mg/TAB",
+                          "病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hydralazine 25mg/TAB",
+                          "病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hydralazine 10mg/TAB",
+                          "病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hydrolazine 25mg/TAB"],
+                correctAnswer: "C"
             },
             {
-                question: "問題 2：你喜歡哪個季節？",
-                options: ["春天", "夏天", "秋天", "冬天"],
+                question: "病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Loratadine 10mg/tab",
+                options: ["病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Lorotadine 10mg/tab",
+                          "病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Loratadine 10mg/tab",
+                          "病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Lorazepam  10mg/tab",
+                          "病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Lovastatin 10mg/tab"],
                 correctAnswer: "B"
             }
             // 可以再增加更多題目
@@ -115,21 +121,21 @@
         }
 
         function showQuestionScreen() {
-            // 顯示題目，並等5秒後顯示十字定位
+            // 顯示題目5秒
             document.getElementById("question").innerText = questions[currentQuestionIndex].question;
             document.getElementById("question").style.display = 'block';
-            setTimeout(showCrosshairScreen, 5000); // 顯示5秒後轉到十字定位畫面
+            setTimeout(showCrosshairScreen, 5000); // 顯示5秒
         }
 
         function showCrosshairScreen() {
-            // 隱藏題目，顯示十字
+            // 隱藏題目，顯示十字2秒
             document.getElementById("question").style.display = 'none';
             document.getElementById("crosshair").style.display = 'block';
-            setTimeout(showCountdownScreen, 2000); // 顯示2秒後轉到倒數畫面
+            setTimeout(showCountdownScreen, 2000); // 顯示2秒
         }
 
         function showCountdownScreen() {
-            // 隱藏十字，顯示倒數
+            // 隱藏十字，顯示倒數3秒
             document.getElementById("crosshair").style.display = 'none';
             const countdownElement = document.getElementById("countdown");
             countdownElement.style.display = 'block';
