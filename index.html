@@ -20,11 +20,12 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            text-align: left;
         }
 
         #crosshair {
             font-size: 50px;
-            color: red;
+            color: black;
         }
 
         #options {
@@ -35,7 +36,7 @@
         }
 
         .option {
-            font-size: 24px;
+            font-size: 35px;
             margin: 0;
             padding: 10px 20px;
             cursor: pointer;
@@ -44,23 +45,27 @@
         }
 
         .top-left { top: 25%; left: 25%; }
-        .top-right { top: 25%; right: 5%; }
+        .top-right { top: 25%; right: 0%; }
         .bottom-left { top: 75%; left: 25%; }
-        .bottom-right { top: 75%; right: 5%; }
+        .bottom-right { top: 75%; right: 0%; }
 
         #question, #countdown {
             font-size: 40px;
             margin-top: 20px;
         }
+
+        pre {
+            white-space: pre-wrap;       /* 保證空格和換行符會顯示 */
+            word-wrap: break-word;      /* 防止長單詞破壞頁面布局 */
+        }
     </style>
 </head>
 <body>
 
-
     <div id="question"></div>
     <div id="crosshair">+</div>
     <div id="countdown"></div>
-    
+
     <div id="options">
         <div id="optionA" class="option top-left">A. 選項1</div>
         <div id="optionB" class="option top-right">B. 選項2</div>
@@ -72,21 +77,24 @@
         const questions = [
             {
                 question: "病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hydralazine 10mg/TAB",
-                options: ["病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hybralazine 10mg/TAB",
-                          "病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hydralazine 25mg/TAB",
-                          "病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hydralazine 10mg/TAB",
-                          "病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hydrolazine 25mg/TAB"],
+                options: [
+                    "病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hybralazine 10mg/TAB",
+                    "病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hydralazine 25mg/TAB",
+                    "病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hydralazine 10mg/TAB",
+                    "病歷號:87654321\n床號:3202 性別:男\n姓名:王小說 生日:80/01/23\n藥品:Hydrolazine 25mg/TAB"
+                ],
                 correctAnswer: "C"
             },
             {
                 question: "病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Loratadine 10mg/tab",
-                options: ["病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Lorotadine 10mg/tab",
-                          "病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Loratadine 10mg/tab",
-                          "病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Lorazepam  10mg/tab",
-                          "病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Lovastatin 10mg/tab"],
+                options: [
+                    "病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Lorotadine 10mg/tab",
+                    "病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Loratadine 10mg/tab",
+                    "病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Lorazepam  10mg/tab",
+                    "病歷號:46652165\n床號:3520 性別:女\n姓名:林富美 生日:91/02/03\n藥品:Lovastatin 10mg/tab"
+                ],
                 correctAnswer: "B"
             }
-            // 可以再增加更多題目
         ];
 
         let currentQuestionIndex = 0;
@@ -116,27 +124,12 @@
         });
 
         function startQuestion() {
-            // 開始顯示題目畫面
-            showQuestionScreen();
-        }
-
-        function showQuestionScreen() {
-            // 顯示題目5秒
-            document.getElementById("question").innerText = questions[currentQuestionIndex].question;
-            document.getElementById("question").style.display = 'block';
-            setTimeout(showCrosshairScreen, 5000); // 顯示5秒
-        }
-
-        function showCrosshairScreen() {
-            // 隱藏題目，顯示十字2秒
-            document.getElementById("question").style.display = 'none';
-            document.getElementById("crosshair").style.display = 'block';
-            setTimeout(showCountdownScreen, 2000); // 顯示2秒
+            // 開始顯示倒數畫面
+            showCountdownScreen();
         }
 
         function showCountdownScreen() {
-            // 隱藏十字，顯示倒數3秒
-            document.getElementById("crosshair").style.display = 'none';
+            // 顯示倒數3秒
             const countdownElement = document.getElementById("countdown");
             countdownElement.style.display = 'block';
             countdownElement.innerText = 3;
@@ -152,12 +145,32 @@
                 }, 1000);
             } else {
                 countdownElement.style.display = 'none';
-                showOptionsScreen();
+                showQuestionScreen();
             }
         }
 
+        function showQuestionScreen() {
+            // 顯示題目5秒
+            document.getElementById("question").innerHTML = `<pre>${questions[currentQuestionIndex].question}</pre>`;
+            document.getElementById("question").style.display = 'block';
+            setTimeout(hideQuestionAndShowCrosshair, 5000); // 顯示題目後5秒消失
+        }
+
+        function hideQuestionAndShowCrosshair() {
+            // 隱藏題目，等待五秒後顯示十字
+            document.getElementById("question").style.display = 'none';
+            setTimeout(showCrosshairScreen, 5000); // 顯示十字
+        }
+
+        function showCrosshairScreen() {
+            // 隱藏題目，顯示十字2秒
+            document.getElementById("crosshair").style.display = 'block';
+            setTimeout(showOptionsScreen, 2000); // 顯示2秒
+        }
+
         function showOptionsScreen() {
-            // 顯示選項區塊
+            // 隱藏十字，顯示選項區塊
+            document.getElementById("crosshair").style.display = 'none';
             const optionsDiv = document.getElementById("options");
             optionsDiv.style.display = 'block';  // 顯示選項
 
@@ -167,10 +180,10 @@
             const optionC = document.getElementById("optionC");
             const optionD = document.getElementById("optionD");
 
-            optionA.innerText = `A. ${questions[currentQuestionIndex].options[0]}`;
-            optionB.innerText = `B. ${questions[currentQuestionIndex].options[1]}`;
-            optionC.innerText = `C. ${questions[currentQuestionIndex].options[2]}`;
-            optionD.innerText = `D. ${questions[currentQuestionIndex].options[3]}`;
+            optionA.innerHTML = `<pre>A. ${questions[currentQuestionIndex].options[0]}</pre>`;
+            optionB.innerHTML = `<pre>B. ${questions[currentQuestionIndex].options[1]}</pre>`;
+            optionC.innerHTML = `<pre>C. ${questions[currentQuestionIndex].options[2]}</pre>`;
+            optionD.innerHTML = `<pre>D. ${questions[currentQuestionIndex].options[3]}</pre>`;
 
             startTime = new Date().getTime(); // 記錄作答時間開始
 
@@ -207,10 +220,21 @@
         }
 
         function displayResults() {
+            let correctCount = 0;
             let resultHtml = '<h2>測驗結果</h2>';
+
+            // 計算答對的題數
             userAnswer.forEach(answer => {
+                if (answer.selectedOption === answer.correctAnswer) {
+                    correctCount++;
+                }
                 resultHtml += `<p>問題: ${answer.question} <br>選擇: ${answer.selectedOption} (正確答案: ${answer.correctAnswer}) <br>耗時: ${answer.timeTaken} 秒</p>`;
             });
+
+            // 顯示正確率
+            const correctRate = (correctCount / questions.length) * 100;
+            resultHtml += `<h3>正確率: ${correctRate.toFixed(2)}%</h3>`;
+
             document.body.innerHTML = resultHtml;
         }
 
